@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+        <!-- Tailwind CSS Output -->
+        <link rel="stylesheet" href="../public/output.css">
+
+        <!-- Custom JS Code -->
+        <script src="index.js"></script>
+    </head>
+    <body>
+        <div class="w-full h-full bg-no-repeat bg-cover bg-fixed bg-homepage">
+            <div class="w-full h-full bg-cover bg-white/50">
+                <h1 class="text-center justify-center pt-8 mb-12 text-6xl font-sans text-black">CS 15 Style Check</h1>
+
+                <div class="grid grid-cols-2">
+                    <div class="bg-white mx-16 p-8 justify-center shadow-lg mb-12">
+                        <h2 class="text-2xl underline underline-offset-1 decoration-blue-400 decoration-solid text-center">Copy + Paste Your Code Here!</h2>
+
+                        <textarea id="inputCode" class="border-2 border-black rounded mt-8 w-fit p-4" rows="10" style="width:100%;"></textarea>
+
+                        <div class="justify-center text-center">
+                            <button id="submitButton" type="button" class="border rounded border-blue-400 bg-blue-400 text-white p-2 m-4 hover:bg-blue-800 inline-block">
+                                Test My Style!
+                            </button>
+                        </div>
+                        
+                    </div>
+                    <div class="bg-white mx-16 p-8 justify-center shadow-lg mb-12">
+                        <h2 id="scanTitle" class="text-2xl underline underline-offset-1 decoration-blue-400 decoration-solid text-center mb-2">What we scan for: </h2>
+                        <ul id="scanList" role="list" class="marker:text-blue-400 list-disc pl-3 space-y-1 text-black">
+                            <li>Spaces between binary operators and no spaces between unary operators</li>
+                            <li>Correct * placement in pointers</li>
+                            <li>Spaces after commas in lists</li>
+                            <li>80 Column Rule</li>
+                            <li>30 Line Rule</li>
+                            <li>Use of and, or, and not instead of &&, ||, and !</li>
+                            <li>Use of break keyword</li>
+                            <li>Curly brace placement</li>
+                            <li>No use of NULL, use nullptr</li>
+                            <li>No use of auto keyword</li>
+                        </ul>
+                    </div>
+                
+                </div>
+            </div>
+            
+        </div>
+    </body>
+</html>
