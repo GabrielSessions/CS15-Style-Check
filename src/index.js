@@ -96,6 +96,9 @@ function runChecks(currentLine, lineNum, commentActive) {
         checkBinaryOperators(currentLine, lineNum);
         pointerCheck(currentLine, lineNum);
         nullCheck(currentLine, lineNum);
+        findBreak(currentLine, lineNum);
+        commasCheck(currentLine, lineNum);
+        ifForWhileParenthesis(currentLine, lineNum);
     }
 
 }
@@ -180,9 +183,46 @@ function nullCheck(line, lineNum) {
 
 
 function thirtyLineRule(numLines, lineNum) {
-    if (numLines == 30) {
-        console.log(numLines);
+    //Only print out alert once per violation
+    if (numLines == 31) {
         createListItem("30 line rule violated on line " + lineNum);
+    }
+}
+
+function findBreak(line, lineNum) {
+    if (line.indexOf("break ") != -1) {
+        createListItem("Possible use of keyword break on line " + lineNum);
+    }
+}
+
+function commasCheck(line, lineNum) {
+    let prevStarPos = 0;
+    while (line.indexOf(",", prevStarPos) != -1) {
+
+        let curIndex = line.indexOf(",", prevStarPos);
+
+        let condition1 = line.substring(curIndex+1, curIndex+2) != " ";
+        let condition2 = line.substring(curIndex-1, curIndex+2) != "','";
+        let condition3 = line.substring(curIndex-1, curIndex+2) != "\",\"";
+
+        if (condition1 && condition2 && condition3) {
+            createListItem("No space after comma on line " + lineNum);
+            prevExclamationPos = line.length + 1;
+        }
+
+        prevStarPos = curIndex + 1;
+    }
+}
+
+function ifForWhileParenthesis(line, lineNum) {
+    if (line.indexOf("if(") != -1) {
+        createListItem("No space between 'if' keyword and parenthesis on " + lineNum);
+    }
+    if (line.indexOf("for(") != -1) {
+        createListItem("No space between 'for' keyword and parenthesis on " + lineNum);
+    }
+    if (line.indexOf("while(") != -1) {
+        createListItem("No space between 'while' keyword and parenthesis on " + lineNum);
     }
 }
 

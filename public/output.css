@@ -472,9 +472,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 1rem;
 }
 
-.mx-16 {
-  margin-left: 4rem;
-  margin-right: 4rem;
+.mx-12 {
+  margin-left: 3rem;
+  margin-right: 3rem;
 }
 
 .mb-12 {
