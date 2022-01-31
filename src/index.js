@@ -41,6 +41,9 @@ function clearScanPanel() {
 
 function checkStyle() {
     let commentActive = false;
+    let bracketCount = 0;
+    let linesInsideFuncCount = 0;
+
     let arrOfLines = $(INPUT_CODE).val().split('\n');
     for (let i = 0; i < arrOfLines.length; i++) {
         let currentLine = arrOfLines[i];
@@ -53,9 +56,32 @@ function checkStyle() {
             commentActive = false;
         }
 
-        runChecks(currentLine, i + 1, commentActive)
+
+        runChecks(currentLine, i + 1, commentActive);
+
+        if (currentLine.indexOf("{") != -1) {
+            bracketCount ++;
+            //console.log(bracketCount);
+        }
+        if (currentLine.indexOf("}") != -1) {
+            bracketCount --;
+            //console.log(bracketCount);
+            if (bracketCount == 0) {
+                linesInsideFuncCount = 0;
+            }
+        }
+        if (bracketCount >= 1) {
+            thirtyLineRule(linesInsideFuncCount, i+1);
+            linesInsideFuncCount ++;
+            
+        }
+        
+        
+
 
     }
+
+    
 
 
     finishedCheck();
@@ -69,6 +95,7 @@ function runChecks(currentLine, lineNum, commentActive) {
         findAuto(currentLine, lineNum);
         checkBinaryOperators(currentLine, lineNum);
         pointerCheck(currentLine, lineNum);
+        nullCheck(currentLine, lineNum);
     }
 
 }
@@ -142,6 +169,20 @@ function pointerCheck(line, lineNum) {
         }
 
         prevStarPos = curIndex + 1;
+    }
+}
+
+function nullCheck(line, lineNum) {
+    if (line.indexOf("NULL") != -1) {
+        createListItem("Use of NULL on line " + lineNum + ", use nullptr instead.");
+    }
+}
+
+
+function thirtyLineRule(numLines, lineNum) {
+    if (numLines == 30) {
+        console.log(numLines);
+        createListItem("30 line rule violated on line " + lineNum);
     }
 }
 
