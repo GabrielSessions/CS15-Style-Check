@@ -1,5 +1,9 @@
 // BG Image From: https://pixabay.com/photos/background-geometric-triangle-3045402/
 
+
+//Sorry about the crappy code :(
+//(This was created at 11 PM)
+
 const SUBMIT_ID = "#submitButton";
 const SCAN_LIST = "#scanList";
 const SCAN_TITLE = "#scanTitle";
@@ -14,11 +18,10 @@ function createListItem(listText) {
 
 function disableButton() {
     $(SUBMIT_ID).attr('disabled', true)
-    $(SUBMIT_ID).addClass('disabled');
     $(SUBMIT_ID).removeClass('bg-blue-400');
     $(SUBMIT_ID).removeClass('border-blue-400');
     $(SUBMIT_ID).removeClass('hover:bg-blue-800');
-    $(SUBMIT_ID).addClass(' ');
+    $(SUBMIT_ID).addClass('disabled border-blue-200 bg-blue-200');
     $(SUBMIT_ID).html("Processing...");
     
 }
@@ -52,12 +55,12 @@ function checkStyle() {
         if (currentLine.indexOf("/*") != -1 && !commentActive) {
             commentActive = true;
         }
+
+        runChecks(currentLine, i + 1, commentActive);
+
         if (currentLine.indexOf("*/") != -1 && commentActive) {
             commentActive = false;
         }
-
-
-        runChecks(currentLine, i + 1, commentActive);
 
         if (currentLine.indexOf("{") != -1) {
             bracketCount ++;
@@ -99,6 +102,17 @@ function runChecks(currentLine, lineNum, commentActive) {
         findBreak(currentLine, lineNum);
         commasCheck(currentLine, lineNum);
         ifForWhileParenthesis(currentLine, lineNum);
+        closedBracket(currentLine, lineNum);
+
+        /*
+        binaryOperatorSpaces('+',currentLine, lineNum);
+        binaryOperatorSpaces('-',currentLine, lineNum);
+        binaryOperatorSpaces('/',currentLine, lineNum);
+        binaryOperatorSpaces('%',currentLine, lineNum);
+        */
+        //binaryOperatorSpacesEq(currentLine, lineNum);
+        binaryOperatorSpacesEqEq(currentLine, lineNum);
+        unaryOperatorNoSpace(currentLine, lineNum);
     }
 
 }
@@ -168,10 +182,19 @@ function pointerCheck(line, lineNum) {
 
         if (spaceAfter && charCheck && strCheck1 && strCheck2 && multiplicationCheck) {
             createListItem("Possible incorrect pointer star (*) placement on line " + lineNum);
-            prevExclamationPos = line.length + 1;
+            prevStarPos = line.length + 1;
         }
 
+
+        //Check for * spaces when * is multiplication
+        if (line.substring(curIndex-1, curIndex) != " " && line.substring(curIndex+1, curIndex+2) != " ") {
+            createListItem("No spaces around * on line " + lineNum);
+        }
+
+
+
         prevStarPos = curIndex + 1;
+        
     }
 }
 
@@ -206,7 +229,7 @@ function commasCheck(line, lineNum) {
         let condition3 = line.substring(curIndex-1, curIndex+2) != "\",\"";
 
         if (condition1 && condition2 && condition3) {
-            createListItem("No space after comma on line " + lineNum);
+            createListItem("No space is present after comma on line " + lineNum);
             prevExclamationPos = line.length + 1;
         }
 
@@ -224,6 +247,106 @@ function ifForWhileParenthesis(line, lineNum) {
     if (line.indexOf("while(") != -1) {
         createListItem("No space between 'while' keyword and parenthesis on " + lineNum);
     }
+
+
+    if (line.indexOf("){") != -1) {
+        createListItem("No space between ) and { on " + lineNum);
+    }
+}
+
+function closedBracket(line, lineNum) {
+
+}
+
+function binaryOperatorSpaces(operator, line, lineNum) {
+    let prevPlusPos = 0;
+    while (line.indexOf(operator, prevPlusPos) != -1) {
+
+        let curIndex = line.indexOf(operator, prevPlusPos);
+
+        if (line.substring(curIndex-1, curIndex+2) != " " + operator + " ") {
+            createListItem("No spaces around '" + operator +"'on line " + lineNum);
+            prevPlusPos = line.length + 1;
+        }
+
+        prevPlusPos = curIndex + 1;
+
+    }
+
+    
+}
+
+function binaryOperatorSpacesEq(line, lineNum) {
+    let prevPlusPos = 0;
+    while (line.indexOf('=', prevPlusPos) != -1) {
+
+        let curIndex = line.indexOf('=', prevPlusPos);
+
+        let condition1 = line.substring(curIndex - 1, curIndex + 1) != "!=";
+        let condition2 = line.substring(curIndex, curIndex + 2) != "==";
+        let condition3 = line.substring(curIndex-1, curIndex+1) != "==";
+        let condition4 = line.substring(curIndex-1, curIndex+2) != " = ";
+
+        if (condition1 && condition2 && condition3 && condition4) {
+            createListItem("No spaces around '='on line " + lineNum);
+            prevPlusPos = line.length + 1;
+        }
+
+        prevPlusPos = curIndex + 1;
+
+    }
+
+    
+}
+
+function binaryOperatorSpacesEqEq(line, lineNum) {
+    let prevPlusPos = 0;
+    while (line.indexOf('==', prevPlusPos) != -1) {
+
+        let curIndex = line.indexOf('==', prevPlusPos);
+
+        if (line.substring(curIndex-1, curIndex+3) != " == " && line.substring(curIndex-2, curIndex+2) != " == ") {
+            createListItem("No spaces around '==' on line " + lineNum);
+            prevPlusPos = line.length + 1;
+        }
+
+        prevPlusPos = curIndex + 1;
+
+    }
+
+    
+}
+
+function unaryOperatorNoSpace(line, lineNum) {
+    let prevPlusPos = 0;
+    while (line.indexOf('++', prevPlusPos) != -1) {
+
+        let curIndex = line.indexOf('++', prevPlusPos);
+
+        if (line.substring(curIndex-1, curIndex+2) == " ++") {
+            createListItem("Space before '++' on line " + lineNum);
+            prevPlusPos = line.length + 1;
+        }
+
+        prevPlusPos = curIndex + 1;
+
+    }
+
+    let prevMinusPos = 0;
+    while (line.indexOf('--', prevMinusPos) != -1) {
+
+        let curIndex = line.indexOf('--', prevMinusPos);
+
+        if (line.substring(curIndex-1, curIndex+2) == " --") {
+            createListItem("Space before '--' on line " + lineNum);
+            console.log(line.substring(curIndex-1, curIndex+2));
+            prevMinusPos = line.length + 1;
+        }
+
+        prevMinusPos = curIndex + 1;
+
+    }
+
 }
 
 function finishedCheck() {
@@ -240,7 +363,10 @@ jQuery(() => {
         
         disableButton();
         clearScanPanel();
-        checkStyle();
+        setTimeout(() => {
+            checkStyle();
+        }, 250);
+        
         
         
     })
