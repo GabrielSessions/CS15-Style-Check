@@ -639,6 +639,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
+.text-green-600 {
+  --tw-text-opacity: 1;
+  color: rgb(22 163 74 / var(--tw-text-opacity));
+}
+
+.text-yellow-600 {
+  --tw-text-opacity: 1;
+  color: rgb(202 138 4 / var(--tw-text-opacity));
+}
+
 .underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
@@ -649,9 +659,24 @@ Ensure the default browser behavior of the `hidden` attribute.
           text-decoration-color: #60a5fa;
 }
 
+.decoration-green-600 {
+  -webkit-text-decoration-color: #16a34a;
+          text-decoration-color: #16a34a;
+}
+
+.decoration-yellow-600 {
+  -webkit-text-decoration-color: #ca8a04;
+          text-decoration-color: #ca8a04;
+}
+
 .decoration-solid {
   -webkit-text-decoration-style: solid;
           text-decoration-style: solid;
+}
+
+.decoration-wavy {
+  -webkit-text-decoration-style: wavy;
+          text-decoration-style: wavy;
 }
 
 .underline-offset-1 {

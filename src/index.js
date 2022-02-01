@@ -197,7 +197,7 @@ function checkBinaryOperators(line, lineNum) {
         const strCheck2 = (line.substring(curIndex-1, curIndex + 1) != "\"!");
 
         if (notEqCheck && charCheck && strCheck1 && strCheck2) {
-            createListItem("Use of ! in non != context on line " + lineNum + ". Replace with 'not' if used as logical not.");
+            createListItem("Warning: Use of ! in non != context on line " + lineNum + ". Replace with 'not' if used as logical not.");
             prevExclamationPos = line.length + 1;
         }
 
@@ -394,7 +394,11 @@ function equalsTrueBrevity(line, lineNum) {
 
 function finishedCheck() {
     if ($(SCAN_LIST).html() == "") {
-        $(SCAN_LIST).html("No style problems found. \n Remember to check your code for proper commenting!");
+        $(SCAN_LIST).html("<p class='underline decoration-wavy decoration-green-600 text-green-600'>No style problems found.</p> \n Remember to check your code for proper commenting!");
+    }
+    else{
+        let temp = $(SCAN_LIST).html();
+        $(SCAN_LIST).html("<p class='underline decoration-wavy decoration-yellow-600 text-yellow-600'>Potential Problems Found:</p> \n" + temp);
     }
     enableButton();
 }
