@@ -47,7 +47,12 @@ function checkStyle() {
     let bracketCount = 0;
     let linesInsideFuncCount = 0;
 
-    let arrOfLines = $(INPUT_CODE).val().split('\n');
+    let inputCodeText = $(INPUT_CODE).val();
+    storeInBrowser(inputCodeText); //stores code input across sessions
+
+    preParseChecks(inputCodeText)
+
+    let arrOfLines = inputCodeText.split('\n');
     for (let i = 0; i < arrOfLines.length; i++) {
         let currentLine = arrOfLines[i];
 
@@ -84,11 +89,44 @@ function checkStyle() {
 
     }
 
-    
-
-
     finishedCheck();
 }
+
+
+function storeInBrowser(codeInput) {
+    try{
+        localStorage.setItem('codeInput', codeInput);
+    }
+    catch {
+        console.log("Unable to store code in local storage");
+    }
+    
+}
+
+function getPrevSessionCode() {
+    try {
+        return localStorage.getItem('codeInput');
+    }
+    catch{
+        return ("");
+    }
+    
+}
+
+
+function preParseChecks(text) {
+    if (text.indexOf("TODO") != -1 || text.indexOf("todo") != -1) {
+        createListItem
+        ("Check your TODOs, are any of them outdated/unecessary?");
+    }
+    if (text.indexOf("/*") == -1) {
+        createListItem("No multi-line comments detected, have you commented your code sufficiently?");
+    }
+    if (text.indexOf("//") == -1) {
+        createListItem("No single-line comments detected, have you commented your code sufficiently?");
+    }
+}
+
 
 function runChecks(currentLine, lineNum, commentActive) {
     eightyColRule(currentLine, lineNum);
@@ -113,6 +151,7 @@ function runChecks(currentLine, lineNum, commentActive) {
         //binaryOperatorSpacesEq(currentLine, lineNum);
         binaryOperatorSpacesEqEq(currentLine, lineNum);
         unaryOperatorNoSpace(currentLine, lineNum);
+        equalsTrueBrevity(currentLine, lineNum);
     }
 
 }
@@ -187,11 +226,9 @@ function pointerCheck(line, lineNum) {
 
 
         //Check for * spaces when * is multiplication
-        if (line.substring(curIndex-1, curIndex) != " " && line.substring(curIndex+1, curIndex+2) != " ") {
+        else if (line.substring(curIndex-1, curIndex) != " " && line.substring(curIndex+1, curIndex+2) != " " && spaceAfter && charCheck &&strCheck1&&strCheck2) {
             createListItem("No spaces around * on line " + lineNum);
         }
-
-
 
         prevStarPos = curIndex + 1;
         
@@ -349,6 +386,12 @@ function unaryOperatorNoSpace(line, lineNum) {
 
 }
 
+function equalsTrueBrevity(line, lineNum) {
+    if (line.indexOf("== true") != -1 || line.indexOf("==true") != -1) {
+        createListItem("Brevity Warning: '== true' statement found on line " + lineNum + ". Remove the '== true' portion of the statement.")
+    }
+}
+
 function finishedCheck() {
     if ($(SCAN_LIST).html() == "") {
         $(SCAN_LIST).html("No style problems found. \n Remember to check your code for proper commenting!");
@@ -367,7 +410,7 @@ jQuery(() => {
             checkStyle();
         }, 250);
         
-        
-        
-    })
+    });
+
+    $(INPUT_CODE).val(getPrevSessionCode());
 });
